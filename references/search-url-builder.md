@@ -18,9 +18,18 @@ Turn a locked target into a LinkedIn search, then import into Waalaxy.
 Base: `https://www.linkedin.com/search/results/people/`
 
 Parameters:
-- `keywords` — titles in Boolean: `("Gérant" OR "Directeur Général") NOT stagiaire`
+- `title` — job titles in Boolean, same syntax as `keywords`: `("Gérant" OR "Directeur Général") NOT stagiaire`. **Always use `title` for job titles, never `keywords`.**
+- `keywords` — free text only (company name, sector, generic terms). Do not put job titles here.
 - `geoUrn` — country geo ID, encoded as `%5B%22105015875%22%5D`
 - `origin` — always `FACETED_SEARCH`
+
+### Example
+
+```
+https://www.linkedin.com/search/results/people/?title=%28%22G%C3%A9rant%22%20OR%20%22Dirigeant%22%20OR%20%22Fondateur%22%20OR%20%22PDG%22%20OR%20%22Pr%C3%A9sident%22%29%20NOT%20stagiaire&origin=FACETED_SEARCH&geoUrn=%5B%22105015875%22%5D
+```
+
+Decoded: `title=("Gérant" OR "Dirigeant" OR "Fondateur" OR "PDG" OR "Président") NOT stagiaire`, `geoUrn=["105015875"]` (France). No `keywords` needed here since the target is purely title-based.
 
 ### Country geoUrn table (Captain Data)
 
@@ -54,9 +63,10 @@ Regions and industries: IDs are not public, go through the LinkedIn UI.
 
 ### Construction
 
-1. Titles in `keywords` in Boolean, URL-encoded.
+1. Titles in Boolean go in `title` (never `keywords`), URL-encoded.
 2. Country geoUrn from the table if the target is at country level.
 3. For industry and region: partial URL + warning + action checklist.
+4. Only use `keywords` if there's non-title free text to search on top of the title filter (e.g. a company name or a generic term).
 
 ### Output format
 
