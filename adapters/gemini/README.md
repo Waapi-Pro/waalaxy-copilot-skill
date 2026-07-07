@@ -11,7 +11,7 @@ Paste the full contents of [`INSTRUCTIONS.md`](./INSTRUCTIONS.md) (same folder) 
 
 ## 3. Knowledge — add these files
 Use **Add knowledge files** (upload, or "Add from Drive" if you keep a copy there). From
-`../../references/` and `../../scripts/`:
+`../../skills/waalaxy-copilot-skill/references/` and `../../skills/waalaxy-copilot-skill/scripts/`:
 - `target-prompts.md`
 - `search-url-builder.md`
 - `sequence-writer.md`

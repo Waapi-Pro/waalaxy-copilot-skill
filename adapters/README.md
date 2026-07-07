@@ -12,8 +12,8 @@ flow:
 Each folder is self-contained: open its `README.md`, follow the steps, paste its `INSTRUCTIONS.md`
 where told. You do not need the other folder to build either one.
 
-Both reuse the same source of truth as the Claude skill: `../references/*.md` and
-`../scripts/score_list.py`. Update those files first when the underlying logic changes (matrix
+Both reuse the same source of truth as the Claude skill: `../skills/waalaxy-copilot-skill/references/*.md`
+and `../skills/waalaxy-copilot-skill/scripts/score_list.py`. Update those files first when the underlying logic changes (matrix
 weights, sequence rules, search URL format), then re-check whether the condensed `INSTRUCTIONS.md`
 in each adapter still matches before re-publishing the GPT/Gem — the instructions are a compressed
 paraphrase of the reference files, not a separate spec.
@@ -32,8 +32,11 @@ between `SKILL.md` and `references/`.
   Interpreter covers this reliably. Gemini's code execution support inside a Gem is less certain —
   test it before trusting it on a real client list (see `gemini/README.md`).
 - **Waalaxy MCP import (Step 6/7 in the Claude version)** works in Claude and ChatGPT (both support
-  MCP connectors — see `../references/waalaxy-mcp.md`). Gemini Gems have no equivalent today; the
-  Gemini adapter always hands back a file or link for manual import instead.
+  MCP connectors — see `../skills/waalaxy-copilot-skill/references/waalaxy-mcp.md`). On Claude, the
+  connector is now bundled into the plugin itself (see the repo root `.mcp.json` and
+  `.claude-plugin/`) so installing the plugin sets it up in one step — no separate manual connector
+  setup needed. Gemini Gems have no MCP equivalent today; the Gemini adapter always hands back a file
+  or link for manual import instead.
 - **Persistent `prospecting-strategy.md`**: Claude writes and updates a real file across the session.
   Neither GPT nor Gem instructions can guarantee a live file the same way — both are told to reprint
   the running recap in chat, and to also produce a downloadable file if Code Interpreter is on.

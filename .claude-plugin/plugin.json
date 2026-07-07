@@ -1,0 +1,10 @@
+{
+  "name": "waalaxy-copilot",
+  "description": "Waalaxy Targeting Copilot: turns a website into scored B2B targets, a LinkedIn/Sales Navigator search URL, a 3-message outreach sequence, and a cleaned lead list — with the Waalaxy MCP connector bundled so imports and campaign pushes work out of the box.",
+  "version": "1.0.0",
+  "author": {
+    "name": "Waalaxy / Waapi",
+    "url": "https://github.com/Waapi-Pro"
+  },
+  "homepage": "https://github.com/Waapi-Pro/waalaxy-copilot-skill"
+}

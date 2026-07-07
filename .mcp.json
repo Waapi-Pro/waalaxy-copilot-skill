@@ -1,0 +1,6 @@
+{
+  "waalaxy": {
+    "type": "sse",
+    "url": "https://stargate.prod.aws.waalaxy.com/api/mcp"
+  }
+}

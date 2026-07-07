@@ -20,7 +20,7 @@ Paste the full contents of [`INSTRUCTIONS.md`](./INSTRUCTIONS.md) (same folder) 
 - `Clean this lead list`
 
 ## 5. Knowledge — upload these files
-From `../../references/` and `../../scripts/`:
+From `../../skills/waalaxy-copilot-skill/references/` and `../../skills/waalaxy-copilot-skill/scripts/`:
 - `target-prompts.md`
 - `search-url-builder.md`
 - `sequence-writer.md`
