@@ -109,7 +109,7 @@ def count_terms(haystack, terms):
 def detect_columns(df):
     """Map columns by content, not header name. Return a dict of role -> [columns]."""
     cols = {c: norm(c) for c in df.columns}
-    title_like, trade_like, loc_like, company_like = [], [], [], []
+    title_like, trade_like, loc_like, company_like, industry_like = [], [], [], [], []
     for c, cn in cols.items():
         if any(k in cn for k in ["job title", "jobtitle", "headline", "title", "position", "poste"]):
             title_like.append(c)
@@ -119,12 +119,15 @@ def detect_columns(df):
             loc_like.append(c)
         if any(k in cn for k in ["company", "entreprise", "societe", "organisation", "organization"]):
             company_like.append(c)
+        if any(k in cn for k in ["industry", "secteur", "sector", "activite", "domaine"]):
+            industry_like.append(c)
     # signal text = everything that can carry trade or title info
     signal_cols = list(dict.fromkeys(title_like + trade_like + company_like))
     return {
         "signal": signal_cols if signal_cols else list(df.columns),
         "title": list(dict.fromkeys(title_like + trade_like)),
         "location": loc_like,
+        "industry": industry_like,
     }
 
 
@@ -133,10 +136,17 @@ def row_text(row, cols):
     return norm(" ".join(parts))
 
 
-def score_industry(sig_text, industries):
-    """45 pts. Full on a direct industry-term hit, partial on a single weak hit, 0 on none."""
-    if not industries:
-        return W_INDUSTRY * 0.5, "no industry in target, neutral"
+def score_industry(sig_text, industries, has_industry_col):
+    """45 pts. Full on a direct industry-term hit, partial on a single weak hit, 0 on none.
+
+    Neutral whenever the axis can't be judged: no industry values in the target, or no
+    industry-like column in the CSV. LinkedIn scrapes routinely lack an industry column,
+    and zeroing the axis in that case would drop otherwise-good leads on missing data
+    rather than a real mismatch.
+    """
+    if not industries or not has_industry_col:
+        reason = "no industry in target, neutral" if not industries else "no industry column in csv, neutral"
+        return W_INDUSTRY * 0.5, reason
     hits = count_terms(sig_text, industries)
     # also try each industry split into words for partial matches
     word_terms = []
@@ -217,14 +227,16 @@ def main():
     job_titles = target.get("job_titles", [])
     exclusions = target.get("exclusions", [])
     location = target.get("location", "")
+    has_industry_col = bool(cols["industry"])
 
     rows = []
     for _, r in df.iterrows():
         sig = row_text(r, cols["signal"])
         title = row_text(r, cols["title"])
         loc = row_text(r, cols["location"])
+        ind_text = row_text(r, cols["industry"]) if has_industry_col else ""
 
-        s_ind, r_ind = score_industry(sig, industries)
+        s_ind, r_ind = score_industry(ind_text, industries, has_industry_col)
         s_role, r_role = score_role(title, sig, job_titles, exclusions)
         s_loc, r_loc = score_location(loc, location)
         s_exc, r_exc = score_exclusions(sig, exclusions)
@@ -267,7 +279,10 @@ def main():
     print("Top drop reasons:")
     for reason, n in top_drop.items():
         print(f"  {reason} ({n})")
-    print(f"Columns mapped -> signal:{cols['signal']} | title:{cols['title']} | location:{cols['location']}")
+    print(f"Columns mapped -> signal:{cols['signal']} | title:{cols['title']} | location:{cols['location']} "
+          f"| industry:{cols['industry']}")
+    if not has_industry_col:
+        print("No industry column detected in the CSV - industry axis scored neutral for every row.")
 
 
 if __name__ == "__main__":

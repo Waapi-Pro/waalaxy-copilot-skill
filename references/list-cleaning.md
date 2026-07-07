@@ -63,12 +63,17 @@ for `exclusions` (off-target trades, agency roles, marketing titles).
 
 | Axis | Weight | Full points when | Partial | Zero |
 |------|--------|------------------|---------|------|
-| Industry / trade | 45 | direct industry-term hit in title/occupation/company | adjacent term | no signal |
+| Industry / trade | 45 | direct industry-term hit in a dedicated industry/sector column | adjacent term | no hit (only when an industry column exists) |
 | Role / seniority | 30 | title in target set | decision-maker term (0.85) or employee term (0.2) | exclusion title forces 0 |
 | Location | 15 | location inside target region/country | — | outside target |
 | Exclusion penalty | 0 to -40 | — | — | each exclusion hit subtracts 20, capped at 40 |
 
 **Bands:** score >= 70 keep. 40 to 69 review. below 40 drop.
+
+The industry axis only ever scores against a genuine industry/sector column (detected by header:
+industry, secteur, sector, activite, domaine). Most LinkedIn scrapes don't have one — in that case
+the axis is always neutral (half points), never zero. The script cannot penalize a lead for data the
+CSV never collected; a missing industry column is not a mismatch.
 
 The matrix is conservative by design. A missing field never auto-drops. It lowers the axis to neutral
 so the row lands in review, not drop. A wrongly dropped lead is invisible to the user. A wrongly kept
