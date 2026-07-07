@@ -22,6 +22,24 @@ Parameters:
 - `geoUrn` — country geo ID, encoded as `%5B%22105015875%22%5D`
 - `origin` — always `FACETED_SEARCH`
 
+### Boolean operator limit (standard search only)
+
+Standard LinkedIn people search cannot reliably process more than **5 boolean operators** (`AND`,
+`OR`, `NOT` combined) in a single `keywords` string. Past that, LinkedIn silently drops or mishandles
+the query instead of erroring, so the URL looks fine but the results are off-target. Count every
+operator before finalizing: `("Gérant" OR "Directeur Général") NOT stagiaire` has 2 (1 `OR` + 1 `NOT`).
+
+When the title list plus exclusions would need more than 5:
+1. Keep the highest-signal `OR` terms first; drop the weakest rather than truncating silently.
+2. Prefer one `NOT` covering a Boolean group (`NOT (stagiaire OR assistant)` still counts once per
+   `OR` inside it, so grouping does not dodge the limit — count every operator, nested or not).
+3. If cutting terms would meaningfully weaken the target, say so in one line and treat it as a signal
+   to move to Sales Navigator instead (see Step 2), which filters on `current_title.include/exclude`
+   as structured lists rather than a single Boolean string.
+
+This limit is specific to standard search's `keywords` field. It does not apply to the Sales
+Navigator filter payload in Step 3.
+
 ### Country geoUrn table (Captain Data)
 
 | Country | geoUrn |
@@ -55,8 +73,9 @@ Regions and industries: IDs are not public, go through the LinkedIn UI.
 ### Construction
 
 1. Titles in `keywords` in Boolean, URL-encoded.
-2. Country geoUrn from the table if the target is at country level.
-3. For industry and region: partial URL + warning + action checklist.
+2. Count boolean operators against the 5-operator limit above; trim or restructure before encoding.
+3. Country geoUrn from the table if the target is at country level.
+4. For industry and region: partial URL + warning + action checklist.
 
 ### Output format
 
@@ -85,6 +104,7 @@ After the standard URL, judge whether Sales Nav would add meaningful precision f
 - Company size is a key target criterion (e.g. engineering firms 1-50, SaaS 51-200)
 - Seniority must be filtered precisely (e.g. exclude juniors on a decision-maker target)
 - The target is broad and would generate more than 2,500 results on standard LinkedIn
+- The title/exclusion Boolean needed more than 5 operators and had to be trimmed on standard search
 
 **If Sales Nav is relevant**, explain in 2-3 lines max the extra filters useful for this specific target. No generic list. Example:
 
