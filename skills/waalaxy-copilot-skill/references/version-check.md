@@ -8,13 +8,13 @@ a session. It never blocks the user's task: check, maybe surface a one-line noti
 ## CONFIG (edit these when the repo changes)
 
 - **Local version file:** `VERSION` at the skill root (source of truth, one line, semver).
-- **Repo:** `https://github.com/Waapi-Pro/waalaxy-copilot-skill` (skill lives at the repo root).
+- **Repo:** `https://github.com/Waapi-Pro/waalaxy-copilot` (skill lives at `skills/waalaxy-copilot-skill/`).
 - **Remote version URL (raw):**
-  `https://raw.githubusercontent.com/Waapi-Pro/waalaxy-copilot-skill/main/VERSION`
+  `https://raw.githubusercontent.com/Waapi-Pro/waalaxy-copilot/main/skills/waalaxy-copilot-skill/VERSION`
 - **Changelog URL (raw):**
-  `https://raw.githubusercontent.com/Waapi-Pro/waalaxy-copilot-skill/main/CHANGELOG.md`
+  `https://raw.githubusercontent.com/Waapi-Pro/waalaxy-copilot/main/skills/waalaxy-copilot-skill/CHANGELOG.md`
 - **Update instructions shown to the user:** re-pull the skill repo — `git pull` in the cloned
-  `waalaxy-copilot-skill` directory (or re-install it from GitHub).
+  `waalaxy-copilot` directory (or re-install it from GitHub).
 - **State file (writable, per machine):** `~/.waalaxy-ai-copilot-state.json`
 
 > Confirm the remote URL points at wherever this skill is actually published before relying on it.
@@ -53,7 +53,7 @@ Parse both as `MAJOR.MINOR.PATCH` and compare numerically (not string compare �
 Prepend a single line to your response, then do the task the user actually asked for:
 
 > 🔄 A newer version of the Waalaxy Copilot is available (**v{remote}**, you're on **v{local}**).
-> Update with `git pull` in your `waalaxy-copilot-skill` directory. Want the changelog?
+> Update with `git pull` in your `waalaxy-copilot` directory. Want the changelog?
 
 Never re-run the skill, block, or nag more than once per session.
 

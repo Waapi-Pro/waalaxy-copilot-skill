@@ -6,7 +6,7 @@ LinkedIn/Sales Nav search URLs, LinkedIn profile optimization, and outreach sequ
 list cleaning).
 
 ```
-/plugin marketplace add Waapi-Pro/waalaxy-copilot-skill
+/plugin marketplace add Waapi-Pro/waalaxy-copilot
 /plugin install waalaxy-copilot
 ```
 

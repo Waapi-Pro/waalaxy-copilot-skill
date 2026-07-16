@@ -35,7 +35,7 @@ land harder.
 
 The first time this skill runs in a session, do the version check in `references/version-check.md`
 — it's throttled to once every 7 days and never blocks the task. It compares the local `VERSION`
-against the copy in `github.com/Waapi-Pro/waalaxy-copilot-skill`. If a newer version exists, prepend
+against the copy in `github.com/Waapi-Pro/waalaxy-copilot`. If a newer version exists, prepend
 a single update line to your reply, then continue with the user's request as normal. If throttled or
 offline, say nothing and proceed.
 
